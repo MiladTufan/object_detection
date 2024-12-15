@@ -1,5 +1,5 @@
 from vision.coco_dataset import COCODataset
-from vision.coco_train import COCOTrainer
+from vision.yolo_train import YOLOTrainer
 import argparse
 from utils import globals
 from utils import utils
@@ -8,7 +8,6 @@ import config
 import os
 os.system("color")
 
-utils.print_torch_info()
 
 
 #########################################################################
@@ -30,14 +29,28 @@ def set_config(args):
 
 #########################################################################
 #
+# Setup
+#
+#########################################################################
+def setup(args):
+    if args.create_splits:
+        utils.create_yolo_splits(args.root, split="train2017")
+        utils.create_yolo_splits(args.root, split="test2017")
+        utils.create_yolo_splits(args.root, split="val2017")
+#########################################################################
+#
 # Sets default configurations for command-line arguments to reduce the 
 # need for specifying many arguments manually.
 #
 #########################################################################
 def main(args):
-    coco = COCODataset(args.coco_root, split="train")
-    trainer = COCOTrainer(coco)
-    trainer.train()
+    setup(args)
+    coco = COCODataset(args.root, split="train")
+    coco_val = COCODataset(args.root, split="val")
+    # coco.coco_to_yolo()
+    # coco_val.coco_to_yolo()
+    trainer = YOLOTrainer(coco, args=args)
+    trainer.obj_detect_train()
 
 
 #########################################################################
@@ -48,9 +61,12 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Entry Point of VQA Algo")
     parser.add_argument("--usr", type=str, default="win", help="set default user")
-    parser.add_argument("--coco_root", type=str, help="path/to/coco/root/dir")
+    parser.add_argument("--root", type=str, help="path/to/root/dir")
     parser.add_argument("--train", type=str, help="Start training loop")
+    parser.add_argument("--create_splits", action="store_true", help="Creates train/val/test splits")
     
     args = parser.parse_args()
     args = set_config(args)
+    
+    utils.print_torch_info()
     main(args)
