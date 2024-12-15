@@ -21,7 +21,7 @@ class YOLOTrainer():
         print(self.device)
         train_results = model.train(
             data=os.path.join(self.args.root, "coco.yaml"),
-            epochs=100,
+            epochs=1,
             imgsz=640,
             device=self.device,
             workers=16,
@@ -29,10 +29,10 @@ class YOLOTrainer():
         )
 
 
-        metrics = model.val()
+        metrics = model.val(data=os.path.join(self.args.root, "coco.yaml"), imgsz=640)
 
 
-        results = model("path/to/image.jpg")
+        results = model(r"C:\Users\Milad\Desktop\Milad\code\object_detection\data\coco\images\test2017\000000000001.jpg")
         results[0].show()
 
 

@@ -60,8 +60,6 @@ class COCODataset(Dataset):
         ann_ids = self.coco.getAnnIds(imgIds=all_imgs[0]["id"])
         anns = self.coco.loadAnns(ann_ids)
         
-        
-        
         for img_data in  tqdm(all_imgs, desc="Converting COCO labels to YOLO format", total=len(all_imgs)):
             ann_ids = self.coco.getAnnIds(imgIds=img_data["id"])
             anns = self.coco.loadAnns(ann_ids)

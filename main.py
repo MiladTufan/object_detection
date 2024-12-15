@@ -34,9 +34,9 @@ def set_config(args):
 #########################################################################
 def setup(args):
     if args.create_splits:
-        utils.create_yolo_splits(args.root, split="train2017")
-        utils.create_yolo_splits(args.root, split="test2017")
-        utils.create_yolo_splits(args.root, split="val2017")
+        utils.create_yolo_splits(args.root, split="train2017", amt=5)
+        utils.create_yolo_splits(args.root, split="test2017", amt=5)
+        utils.create_yolo_splits(args.root, split="val2017", amt=5)
 #########################################################################
 #
 # Sets default configurations for command-line arguments to reduce the 
@@ -47,8 +47,8 @@ def main(args):
     setup(args)
     coco = COCODataset(args.root, split="train")
     coco_val = COCODataset(args.root, split="val")
-    # coco.coco_to_yolo()
-    # coco_val.coco_to_yolo()
+    coco.coco_to_yolo()
+    coco_val.coco_to_yolo()
     trainer = YOLOTrainer(coco, args=args)
     trainer.obj_detect_train()
 

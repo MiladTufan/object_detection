@@ -2,7 +2,6 @@ import torch
 from utils import globals
 import os
 
-
 def print_torch_info():
     print(f"{globals.TAGS['INFO_TAG']} PyTorch version: {torch.__version__}")
     
@@ -30,15 +29,19 @@ def print_torch_info():
         except ImportError:
             print(f"{globals.TAGS['INFO_TAG']}   - {lib}: Not installed")
             
-
-def create_yolo_splits(root, split="train2017"):
+def create_yolo_splits(root, split="train2017", amt=1):
     path = os.path.join(root, "images", split)
     all_imgs = os.listdir(path)
     
-    
+    amt_imgs = len(all_imgs) / amt
+    cntr = 0
     with open(os.path.join(root, split+".txt"), "w") as file:
         for img_name in all_imgs:
             if img_name != all_imgs[-1]:
                 file.write(os.path.join(path, img_name)+"\n")
             else:
                 file.write(os.path.join(path, img_name))
+        
+            if cntr > amt_imgs:
+                break
+            cntr += 1
